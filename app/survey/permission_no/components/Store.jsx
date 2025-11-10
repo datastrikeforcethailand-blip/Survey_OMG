@@ -38,6 +38,8 @@ export default function StepStoreNoPermission({ data = {}, onSave }) {
     permission_reason: "",
     shop_size: "",
     special_type: [],
+    store_freezer: data.store_freezer || "",
+    store_shelf: data.store_shelf || "",
   });
 
   const [geoLoading, setGeoLoading] = useState(false);
@@ -213,6 +215,14 @@ export default function StepStoreNoPermission({ data = {}, onSave }) {
     setStoreInfo((prev) => ({ ...prev, special_type: selected }));
   };
 
+  const handleSelectFreezer = (opt) => {
+    setStoreInfo((prev) => ({ ...prev, store_freezer: opt }));
+  };
+  const handleSelectShelf = (opt) => {
+    setStoreInfo((prev) => ({ ...prev, store_shelf: opt }));
+  };
+
+
   const isSaveDisabled =
     geoLoading ||
     !storeInfo.store_name ||
@@ -220,7 +230,9 @@ export default function StepStoreNoPermission({ data = {}, onSave }) {
     !storeInfo.store_district ||
     !storeInfo.store_subdistrict ||
     !storeInfo.photo_store ||
-    !storeInfo.permission_reason;
+    !storeInfo.permission_reason ||
+    !storeInfo.store_freezer ||
+    !storeInfo.store_shelf;
 
   // ------- สำคัญ!!  map products แบบไม่แนบ _id, แนบ product_id/fmProID -------
   const handleSave = () => {
@@ -338,6 +350,77 @@ export default function StepStoreNoPermission({ data = {}, onSave }) {
           </div>
         </div>
 
+        {/* FREEZER */}
+        <div className="mb-3">
+          <div className="text-base font-semibold mb-1 text-[#0094E5]">
+            พบตู้แช่สำหรับนมหรือไม่ <span className="text-red-500">*</span>
+          </div>
+          <div className="flex flex-row gap-2">
+            {["พบ", "ไม่พบ"].map((opt) => (
+              <label
+                key={opt}
+                tabIndex={0}
+                className={`
+                  flex items-center px-3 py-1.5 rounded-lg border font-medium text-sm cursor-pointer select-none transition-all
+                  outline-none focus:ring-2 focus:ring-[#FF9100]/40
+                  ${storeInfo.store_freezer === opt
+                    ? "bg-[#FF9100]/20 border-[#FF9100] text-[#FF9100] shadow"
+                    : "bg-white border-gray-200 text-[#1a355e] hover:border-[#FF9100]/50 hover:bg-[#fff4e6]"}
+                `}
+                style={{ minWidth: 56, boxShadow: storeInfo.store_freezer === opt ? "0 2px 6px #ffe6c180" : "none" }}
+                onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") handleSelectFreezer(opt); }}
+                onClick={() => handleSelectFreezer(opt)}
+              >
+                <input
+                  type="radio"
+                  name="store_freezer"
+                  value={opt}
+                  checked={storeInfo.store_freezer === opt}
+                  onChange={() => handleSelectFreezer(opt)}
+                  className="hidden"
+                />
+                {opt}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* SHELF */}
+        <div className="mb-3">
+          <div className="text-base font-semibold mb-1 text-[#0094E5]">
+            พบชั้นวางนม UHT หรือไม่ <span className="text-red-500">*</span>
+          </div>
+          <div className="flex flex-row gap-2">
+            {["พบ", "ไม่พบ"].map((opt) => (
+              <label
+                key={opt}
+                tabIndex={0}
+                aria-label={opt}
+                className={`
+                  flex items-center justify-center px-4 py-2 rounded-xl border font-medium text-sm cursor-pointer select-none transition-all
+                  outline-none focus:ring-2 focus:ring-[#FF9100]/30
+                  ${storeInfo.store_shelf === opt
+                    ? "bg-[#FF9100]/15 border-[#FF9100] text-[#FF9100]"
+                    : "bg-white border-gray-200 text-[#21295c] hover:border-[#FF9100]/60 hover:bg-[#fff4e6]"}
+                `}
+                style={{ minWidth: 64, fontWeight: storeInfo.store_shelf === opt ? 700 : 500 }}
+                onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") handleSelectShelf(opt); }}
+                onClick={() => handleSelectShelf(opt)}
+              >
+                <input
+                  type="radio"
+                  name="store_shelf"
+                  value={opt}
+                  checked={storeInfo.store_shelf === opt}
+                  onChange={() => handleSelectShelf(opt)}
+                  className="hidden"
+                />
+                {opt}
+              </label>
+            ))}
+          </div>
+        </div>
+        
         {/* ------- Section: รายการสินค้า ------- */}
         <h2 className="text-2xl font-bold mb-6">รายการสินค้า</h2>
         {loading && (
