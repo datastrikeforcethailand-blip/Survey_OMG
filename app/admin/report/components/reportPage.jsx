@@ -135,6 +135,12 @@ export default function ReportPage() {
         <option key={idx} value={d.name}>{d.name}</option>
       ));
   };
+  const getUserDisplay = (userId) => {
+    if (!userId) return "-";
+    const user = userOptions.find((u) => u.user_id === userId);
+    if (!user) return userId; // ถ้าไม่เจอใน list ก็โชว์แค่ user_id ไปก่อน
+    return `${user.user_id} (${user.full_name || ""})`;
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100 p-6">
@@ -323,7 +329,7 @@ export default function ReportPage() {
                             <tbody>
                               {d.userSummary.map((u, idx) => (
                               <tr key={idx}>
-                                <td className="border p-1">{u.user_id}</td>
+                                <td className="border p-1">{getUserDisplay(u.user_id)}</td>
                                 <td className="border p-1 text-center">{u.count}</td>
                                 <td className="border p-1 text-center">{u.approved}</td>
                                 <td className="border p-1 text-center">{u.notApproved}</td>
