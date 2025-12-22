@@ -155,8 +155,8 @@ export default function StepStoreNoPermission({ data = {}, onSave }) {
       setPhotoError("ไฟล์ต้องเป็น JPEG เท่านั้น");
       return;
     }
-    if (file.size > 3 * 1024 * 1024) {
-      setPhotoError("ขนาดไฟล์รูปต้องไม่เกิน 3MB");
+    if (file.size > 10 * 1024 * 1024) {
+      setPhotoError("ขนาดไฟล์รูปต้องไม่เกิน 10MB");
       return;
     }
     setStoreInfo((prev) => ({ ...prev, photo_store: file }));
