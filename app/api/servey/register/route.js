@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { connectMongoDB } from "../../../../lib/mongodb";
 import Register from "../../../../models/user";
 
@@ -20,10 +21,13 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: "User ID นี้ถูกใช้แล้ว" }, { status: 409 });
     }
 
+    // ✅ สร้าง bcrypt password ใหม่
+    const hashedPassword = await bcrypt.hash(user_password, 10);
+
     // ✅ สร้าง user ใหม่
     const newUser = await Register.create({
       user_id,
-      user_password,
+      user_password: hashedPassword,
       user_first_name,
       user_last_name,
       user_tel,
@@ -31,9 +35,25 @@ export async function POST(req) {
       route: role === "member" ? route : null, // ✅ บันทึกเฉพาะ member
     });
 
-    return NextResponse.json({ success: true, data: newUser });
+    // ✅ ไม่ส่ง password กลับ
+    return NextResponse.json({
+      success: true,
+      data: {
+        _id: newUser._id,
+        user_id: newUser.user_id,
+        user_first_name: newUser.user_first_name,
+        user_last_name: newUser.user_last_name,
+        user_tel: newUser.user_tel,
+        role: newUser.role,
+        route: newUser.route,
+        createdAt: newUser.createdAt,
+      },
+    });
   } catch (error) {
     console.error("API Error:", error);
-    return NextResponse.json({ success: false, message: "Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: "Server Error" },
+      { status: 500 }
+    );
   }
 }

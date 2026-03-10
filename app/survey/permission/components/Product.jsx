@@ -210,6 +210,9 @@ export default function Step2Products({ onBack, onNext }) {
                   <div className="font-semibold text-base truncate">
                     {prod.fmProName}
                   </div>
+                  <div className="font-semibold text-base truncate">
+                    ขนาด: {prod.fmProSize}
+                  </div>
                   <div className="text-xs text-gray-500 mb-1">
                     รหัส: {prod.fmProID}
                   </div>

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 // Connect MongoDB
-mongoose.connect("mongodb+srv://bigboss:Joedata2025@survey.jolub0l.mongodb.net/survey_chonburi", {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
