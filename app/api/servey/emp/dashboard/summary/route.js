@@ -26,8 +26,28 @@ export async function GET(req) {
     await connectMongoDB();
 
     const { searchParams } = new URL(req.url);
+    //ดึงทั้งหมด
     const user_id = searchParams.get("user_id");
     const matchStage = user_id ? { $match: { user_id } } : { $match: {} };
+    // const user_id = searchParams.get("user_id");
+
+    // // ย้อนหลัง 3 เดือน ถึงปัจจุบัน
+    // const now = new Date();
+    // const threeMonthsAgo = new Date();
+    // threeMonthsAgo.setMonth(now.getMonth() - 3);
+
+    // const matchQuery = {
+    //   createdAt: {
+    //     $gte: threeMonthsAgo,
+    //     $lte: now,
+    //   },
+    // };
+
+    // if (user_id) {
+    //   matchQuery.user_id = user_id;
+    // }
+
+    // const matchStage = { $match: matchQuery };
 
     const pipeline = [
       matchStage,
@@ -68,6 +88,14 @@ export async function GET(req) {
           kids: {
             $sum: { $cond: [{ $in: ["$statusOMG", ["มีขาย", "สินค้าหมด"]] }, 1, 0] }
           },
+          marketInfoFMFR: { $sum: { $cond: [{ $and: [{ $in: ["$statusFMFR", ["มีขาย", "สินค้าหมด"]] },{ $eq: ["$market_info.reason", "Sales Foremost"] }]},1,0]}
+          },
+          marketInfoOther: { $sum: { $cond: [{ $and: [
+          { $in: ["$statusFMFR", ["มีขาย", "สินค้าหมด"]] },
+          { $ne: ["$market_info.reason", "Sales Foremost"] },
+          { $ne: ["$market_info.reason", null] },
+          { $ne: ["$market_info.reason", ""] }]},1,0]}
+          },
           stores: {
             $push: {
               surID: "$surID",
@@ -79,6 +107,7 @@ export async function GET(req) {
               photo_store: "$store_info.photo_store",
               photo_freezer: "$store_info.photo_freezer",
               photo_shelf: "$store_info.photo_shelf",
+              market_info: "$market_info.reason"
             }
           }
         }
@@ -97,6 +126,8 @@ export async function GET(req) {
               neverFMFR: "$neverFMFR",
               stopFMFR: "$stopFMFR",
               kids: "$kids",
+              marketInfoFMFR: "$marketInfoFMFR",
+              marketInfoOther: "$marketInfoOther",
               stores: "$stores"
             }
           }

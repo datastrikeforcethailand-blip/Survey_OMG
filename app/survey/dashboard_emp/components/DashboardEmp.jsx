@@ -108,6 +108,7 @@ const DashboardEmp = () => {
     const text = [
       `สรุปงานประจำ วันที่ ${day.thaiDate || day.surveyDate}`,
       `สายวิ่ง : "${userRoute}"`,
+      `อำเภอ : "${zone._id}"`,
       `รวมร้านที่เข้า  :  ${day.totalStores || 0} ร้าน`,
       ``,
       `สถานะสำรวจ:`,
@@ -116,6 +117,8 @@ const DashboardEmp = () => {
       ``,
       `สถานะสินค้า`,
       `ร้านที่มีขาย FMFR : ${day.fmfr || 0} ร้าน`,
+      `(ซื้อจาก ศูนย์ฯ : ${day.marketInfoFMFR || 0} ร้าน)`,
+      `(ซื้อจากแหล่งอื่น : ${day.marketInfoOther || 0} ร้าน)`,
       `ร้านที่มีขาย OMEGA : ${day.kids || 0} ร้าน`,
       `ร้านที่เลิกขาย : ${day.stopFMFR || 0} ร้าน`,
       `ร้านที่ไม่เคยขาย : ${day.neverFMFR || 0} ร้าน`,
