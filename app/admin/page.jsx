@@ -1,11 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Users, FileBarChart2, PieChart, LogOut } from "lucide-react";
+import { Users, FileBarChart2, PieChart, LogOut, FilePen } from "lucide-react";
 
 const foremostBlue = "#0094E5";
 const foremostGreen = "#2ECC71";
 const foremostPurple = "#9B59B6";
+const foremostDarkBlue = "#2596be";
 const logoutRed = "#D32F2F";
 const darkText = "#222";
 
@@ -68,6 +69,19 @@ export default function AdminPage() {
           >
             <PieChart size={22} />
             สรุป
+          </Link>
+
+          <Link
+            href="/admin/editData"
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-base font-semibold text-white shadow-md hover:scale-[1.03] active:scale-100 transition-all duration-150"
+            style={{
+              backgroundColor: foremostDarkBlue,
+              border: `2px solid ${foremostDarkBlue}`,
+              letterSpacing: "0.5px",
+            }}
+          >
+            <FilePen size={22} />
+            จัดการข้อมูล
           </Link>
         </div>
 
